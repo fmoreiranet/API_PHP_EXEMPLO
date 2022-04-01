@@ -1,4 +1,7 @@
 <?php
+include_once "./config/config.php";
+//require_once "./config/config.php";
+
 //phpinfo();
  try{     
     if (count($_REQUEST) == 0) throw new Exception();
