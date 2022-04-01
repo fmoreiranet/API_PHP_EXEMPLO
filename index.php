@@ -1,10 +1,5 @@
 <?php
-
- //$nome = "Fabiano Moreira";
- //echo "<h2>$nome</h2>";
- //echo '<h2>$nome</h2>';
- //phpinfo();
- 
+//phpinfo();
  try{     
     if (count($_REQUEST) == 0) throw new Exception();
      
