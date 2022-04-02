@@ -4,7 +4,7 @@ class DAO
 {
     private $pdo;    
 
-    function.conecta(){
+    function conecta(){
         try{
             //new PDO('mysql:host=localhost;port=8888;dbname=test', $user, $pass);
             $pdo = new PDO(DRIVE .":host=".HOST.";port=".PORT.";dbname=".DB , USER, PASS);
