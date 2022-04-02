@@ -9,6 +9,29 @@ include_once "./config/config.php";
     $method = $_SERVER["REQUEST_METHOD"];
 
     if ($method == "GET"){ //Pesquisa
+        $url = explode("/", $_GET["url"]);
+        //localhost/api/usuario/list
+        var_dump($url);
+
+        switch ($url[0]) {
+            case "usuario":
+                switch($url[1]){
+                    case "list":{
+
+                    }
+                }
+            break;
+
+            case "produto":
+            break;
+            
+            default:
+                throw new Exception();
+            break;
+        }
+
+
+
         http_response_code(200);
         echo "Entrada de um GET";
     }
