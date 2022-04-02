@@ -14,7 +14,7 @@ require_once "./app/models/usuario.php";
         $url = explode("/", $_GET["url"]);
         //localhost/api/usuario/list
         
-        var_dump($url);
+        //var_dump($url);
         $result = null;
 
         switch ($url[0]) {
