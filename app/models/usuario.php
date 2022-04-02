@@ -15,13 +15,18 @@ class Usuario()
     public ativo;
 
     public function getAll(){
-        $dao = new DAO;
-        $conn = $dao->conecta();
-        $sql = "select * from usuario";
-        $stman = $conn->prepare($sql);
-        $stman-> execute();
-        $result = $stman->fetchAll();
-        return $result;
+        try{
+            $dao = new DAO;
+            $sql = "select * from usuario";
+            $conn = $dao->conecta();
+            $stman = $conn->prepare($sql);
+            //$stman = $dao->conecta()->prepare($sql);
+            $stman-> execute();
+            $result = $stman->fetchAll();
+            return $result;
+        }catch(Exception $e){
+            throw new Exception("Erro ao listar os usuarios: ". $e->getMessage());
+        }
     } 
 
 }
