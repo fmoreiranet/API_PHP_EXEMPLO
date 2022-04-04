@@ -13,6 +13,7 @@ require_once "./app/models/usuario.php";
     if ($method == "GET"){ //Pesquisa
         $url = explode("/", $_GET["url"]);
         //localhost/api/usuario/list
+        //localhost/api/usuario/get/1
         
         //var_dump($url);
         $result = null;
@@ -20,11 +21,19 @@ require_once "./app/models/usuario.php";
         switch ($url[0]) {
             case "usuario":
                 switch($url[1]){
+                    case "get":{
+                        if(!isset($url[2])) throw new Exception();
+                        $user = new Usuario;
+                        $result = $user->get($url[2]);
+                    }
+                    break;
+
                     case "list":{
                         $user = new Usuario;
                         $result = $user->getAll();
                     }
                     break;
+
                     default:
                         throw new Exception();
                     break;

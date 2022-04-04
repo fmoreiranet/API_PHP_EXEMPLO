@@ -26,4 +26,18 @@ class Usuario
         }
     } 
 
+    public function get($id){
+        try{
+            $sql = "select * from usuario where id = :id";
+            $dao = new DAO;
+            $stman = $dao->conecta()->prepare($sql);
+            $stman->bindParam(":id", $id);
+            $stman->execute();
+            $result = $stman->fetchALL();
+            return $result;
+         }catch(Exception $e){
+            throw new Exception("Erro ao pegar o usuario: ". $e->getMessage());
+        }
+    }
+
 }
