@@ -9,13 +9,15 @@ require_once "./app/models/usuario.php";
     if (count($_REQUEST) == 0) throw new Exception();
      
     $method = $_SERVER["REQUEST_METHOD"];
+    
+    $url = explode("/", $_GET["url"]);
+    //localhost/api/usuario/list
+    //localhost/api/usuario/get/1
+    //var_dump($url);
 
-    if ($method == "GET"){ //Pesquisa
-        $url = explode("/", $_GET["url"]);
-        //localhost/api/usuario/list
-        //localhost/api/usuario/get/1
-        
-        //var_dump($url);
+    //Pesquisa
+    if ($method == "GET"){      
+        header("Content-Type: application/json; charset=UTF-8");   
         $result = null;
 
         switch ($url[0]) {
@@ -52,7 +54,32 @@ require_once "./app/models/usuario.php";
         echo json_encode($result);
     }
 
-    if ($method == "POST"){ //Cadastros e Atualizações
+    //Cadastros e Atualizações
+    if ($method == "POST"){ 
+        header("Content-Type: application/json; charset=UTF-8");
+        switch ($url[0]) {
+            case "usuario":
+                switch ($url[1]){
+                    case "add":{
+                        $dadosUser = json_encode(file_get_contents('php://input'));
+                        var_dump($dadosUser);
+                        $user = new Usuario;
+                        var_dump($user);
+                        //$result = $user->add();
+                    }
+                    break;
+
+                    default:
+                        throw new Exception();
+                    break;
+                }
+            break;
+            
+            default:
+                throw new Exception();
+            break;
+        }
+        
         http_response_code(200);
         echo "Entra de um POST";
     }
