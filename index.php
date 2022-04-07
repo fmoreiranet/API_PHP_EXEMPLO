@@ -3,51 +3,52 @@ include_once "./config/config.php";
 
 require_once "./app/services/DAO.php";
 require_once "./app/models/usuario.php";
+require_once "./app/controller/usuarioController.php";
 
 //phpinfo();
- try{     
+try {
     if (count($_REQUEST) == 0) throw new Exception();
-     
+
     $method = $_SERVER["REQUEST_METHOD"];
-    
+
     $url = explode("/", $_GET["url"]);
     //localhost/api/usuario/list
     //localhost/api/usuario/get/1
     //var_dump($url);
 
+    $result = null;
     //Pesquisa
-    if ($method == "GET"){      
-        header("Content-Type: application/json; charset=UTF-8");   
-        $result = null;
+    if ($method == "GET") {
+        header("Content-Type: application/json; charset=UTF-8");
 
         switch ($url[0]) {
             case "usuario":
-                switch($url[1]){
-                    case "get":{
-                        if(!isset($url[2])) throw new Exception();
-                        $user = new Usuario;
-                        $result = $user->get($url[2]);
-                    }
-                    break;
+                switch ($url[1]) {
+                    case "get": {
+                            if (!isset($url[2])) throw new Exception();
+                            $userController = new usuarioController;
+                            $result = $userController->get($url[2]);
+                        }
+                        break;
 
-                    case "list":{
-                        $user = new Usuario;
-                        $result = $user->getAll();
-                    }
-                    break;
+                    case "list": {
+                            $userController = new usuarioController;
+                            $result = $userController->getAll();
+                        }
+                        break;
 
                     default:
                         throw new Exception();
-                    break;
+                        break;
                 }
-            break;
+                break;
 
             case "produto":
-            break;
-            
+                break;
+
             default:
                 throw new Exception();
-            break;
+                break;
         }
 
         http_response_code(200);
@@ -55,38 +56,37 @@ require_once "./app/models/usuario.php";
     }
 
     //Cadastros e Atualizações
-    if ($method == "POST"){ 
+    if ($method == "POST") {
         header("Content-Type: application/json; charset=UTF-8");
         switch ($url[0]) {
             case "usuario":
-                switch ($url[1]){
-                    case "add":{
-                        $dadosUser = json_encode(file_get_contents('php://input'));
-                        var_dump($dadosUser);
-                        $user = new Usuario;
-                        var_dump($user);
-                        //$result = $user->add();
-                    }
-                    break;
+                switch ($url[1]) {
+                    case "add": {
+                            $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
+                            $user = new Usuario;
+                            $user = $dadosUser;
+                            var_dump($user);
+                            $userController = new usuarioController;
+                            $result = $userController->add($dadosUser);
+                        }
+                        break;
 
                     default:
                         throw new Exception();
-                    break;
+                        break;
                 }
-            break;
-            
+                break;
+
             default:
                 throw new Exception();
-            break;
+                break;
         }
-        
-        http_response_code(200);
-        echo "Entra de um POST";
-    }
 
-} catch(Exception $e){
+        http_response_code(200);
+        //echo "Entra de um POST";
+        echo json_encode($result);
+    }
+} catch (Exception $e) {
     http_response_code(404);
     echo json_encode(array("mensagem" => "Pagina não encontrada!"));
 }
-
-
