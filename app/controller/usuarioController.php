@@ -39,12 +39,16 @@ class UsuarioController
             $sql = "INSERT INTO usuario 
                     (id, nome, senha, data_nasc, email, fotoPerfil, tel, cpf, ativo) 
                     VALUES
-                    (null, :nome, :senha, :data_nasc, :email, :foto_perfil, :tel, :cpf, :ativo)";
+                    (null, :nome, md5(:senha), :data_nasc, :email, :foto_perfil, :tel, :cpf, :ativo)";
+            //$senhaCryp = md5($user->senha);
+            $senhaCryp = crypt($user->senha, '$5$rounds=5000$' . $user->email . '$');
+            $dataBanco = $this->formatDateBD($user->data_nasc);
+
             $dao = new DAO;
             $stman = $dao->conecta()->prepare($sql);
             $stman->bindParam(":nome", $user->nome);
-            $stman->bindParam(":senha", md5($user->senha));
-            $stman->bindParam(":data_nasc", $this->formatDateBD($user->data_nasc));
+            $stman->bindParam(":senha", $senhaCryp);
+            $stman->bindParam(":data_nasc", $dataBanco);
             $stman->bindParam(":email", $user->email);
             $stman->bindParam(":foto_perfil", $user->foto_perfil);
             $stman->bindParam(":tel", $user->tel);
@@ -56,9 +60,10 @@ class UsuarioController
         }
     }
 
+
     private  function  formatDateBD($date)
     { // Entrada: DD/MM/YYYY -> YYYY/MM/DD
         $partDate = explode("/", $date);
-        return new DateTime($partDate[2] . "-" . $partDate[1] . "-" . $partDate[0]);
+        return ($partDate[2] . "-" . $partDate[1] . "-" . $partDate[0]);
     }
 }

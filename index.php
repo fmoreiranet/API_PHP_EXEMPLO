@@ -64,10 +64,19 @@ try {
                     case "add": {
                             $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
                             $user = new Usuario;
-                            $user = $dadosUser;
+                            //Popular o objeto usuario ($dadosUser para $user)
+                            $user->nome = $dadosUser->nome;   // "nome": "Silvia Cristina",
+                            $user->email = $dadosUser->email; // "email": "sc@email.com",
+                            $user->senha = $dadosUser->senha; // "senha": "123@123",
+                            $user->data_nasc = $dadosUser->data_nasc; // "data_nasc": "12/05/2010",
+                            $user->id = $dadosUser->id; //"id": null,
+                            $user->foto_perfil = $dadosUser->foto_perfil; // "foto_perfil": "",
+                            $user->tel = $dadosUser->tel;   // "tel": "5555-666666",
+                            $user->cpf = $dadosUser->cpf;   // "cpf": "12312312344",
+                            $user->ativo = $dadosUser->ativo; // "ativo": 1                                         
                             var_dump($user);
                             $userController = new usuarioController;
-                            $result = $userController->add($dadosUser);
+                            $result = $userController->add($user);
                         }
                         break;
 
