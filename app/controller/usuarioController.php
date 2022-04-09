@@ -54,9 +54,44 @@ class UsuarioController
             $stman->bindParam(":tel", $user->tel);
             $stman->bindParam(":cpf", $user->cpf);
             $stman->bindParam(":ativo", $user->ativo);
-            $stman->execute();
+            return $stman->execute();
         } catch (Exception $e) {
             throw new Exception("Erro ao cadastra o usuario: " . $e->getMessage());
+        }
+    }
+
+    public function update(Usuario $user)
+    {
+        try {
+            $sql = "UPDATE  usuario 
+                    SET nome = :nome,
+                    senha = md5(:senha),
+                    data_nasc = :data_nasc,
+                    email = :email,
+                    fotoPerfil = :foto_perfil,
+                    tel = :tel,
+                    cpf = :cpf, 
+                    ativo = :ativo
+                    WHERE usuario.id = :id";
+            //$senhaCryp = md5($user->senha);
+            $senhaCryp = crypt($user->senha, '$5$rounds=5000$' . $user->email . '$');
+            $dataBanco = $this->formatDateBD($user->data_nasc);
+
+            $dao = new DAO;
+            $stman = $dao->conecta()->prepare($sql);
+            $stman->bindParam(":id", $user->id);
+            $stman->bindParam(":nome", $user->nome);
+            $stman->bindParam(":senha", $senhaCryp);
+            $stman->bindParam(":data_nasc", $dataBanco);
+            $stman->bindParam(":email", $user->email);
+            $stman->bindParam(":foto_perfil", $user->foto_perfil);
+            $stman->bindParam(":tel", $user->tel);
+            $stman->bindParam(":cpf", $user->cpf);
+            $stman->bindParam(":ativo", $user->ativo);
+
+            $stman->execute();
+        } catch (Exception $e) {
+            throw new Exception("Erro ao atualizado o usuario: " . $e->getMessage());
         }
     }
 
