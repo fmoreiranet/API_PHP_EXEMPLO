@@ -88,8 +88,7 @@ class UsuarioController
             $stman->bindParam(":tel", $user->tel);
             $stman->bindParam(":cpf", $user->cpf);
             $stman->bindParam(":ativo", $user->ativo);
-
-            $stman->execute();
+            return $stman->execute();
         } catch (Exception $e) {
             throw new Exception("Erro ao atualizado o usuario: " . $e->getMessage());
         }

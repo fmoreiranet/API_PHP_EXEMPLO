@@ -52,7 +52,7 @@ try {
         }
 
         http_response_code(200);
-        echo json_encode($result);
+        echo json_encode(array("result" => $result));
     }
 
     //Cadastros e Atualizações
@@ -86,9 +86,9 @@ try {
 
         http_response_code(200);
         //echo "Entra de um POST";
-        echo json_encode($result);
+        echo json_encode(array("result" => $result));
     }
 } catch (Exception $e) {
     http_response_code(404);
-    echo json_encode(array("mensagem" => "Pagina não encontrada!"));
+    echo json_encode(array("result" => "Pagina não encontrada!"));
 }
