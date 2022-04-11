@@ -2,14 +2,15 @@
 
 class UsuarioController
 {
-    public function getAll()
+    public function getAll($ativo = 1)
     {
         try {
             $dao = new DAO;
-            $sql = "SELECT * from usuario";
+            $sql = "SELECT * from usuario where ativo = :ativo";
             $conn = $dao->conecta();
             $stman = $conn->prepare($sql);
             //$stman = $dao->conecta()->prepare($sql);
+            $stman->bindParam(":ativo", $ativo);
             $stman->execute();
             $result = $stman->fetchAll();
             return $result;
@@ -21,7 +22,7 @@ class UsuarioController
     public function get($id)
     {
         try {
-            $sql = "SELECT * from usuario where id = :id";
+            $sql = "SELECT * from usuario where id = :id && ativo <> 0";
             $dao = new DAO;
             $stman = $dao->conecta()->prepare($sql);
             $stman->bindParam(":id", $id);
@@ -98,7 +99,8 @@ class UsuarioController
     public function delete($id)
     {
         try {
-            $sql = "DELETE FROM usuario WHERE id = :id";
+            //$sql = "DELETE FROM usuario WHERE id = :id";
+            $sql = "UPDATE usuario Set ativo = 0 Where id = :id";
             $dao = new DAO;
             $stman = $dao->conecta()->prepare($sql);
             $stman->bindParam(":id", $id);

@@ -37,6 +37,12 @@ try {
                         }
                         break;
 
+                    case "listnot": {
+                            $userController = new usuarioController;
+                            $result = $userController->getAll(0);
+                        }
+                        break;
+
                     default:
                         throw new Exception();
                         break;
