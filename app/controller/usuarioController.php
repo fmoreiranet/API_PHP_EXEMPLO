@@ -6,7 +6,7 @@ class UsuarioController
     {
         try {
             $dao = new DAO;
-            $sql = "select * from usuario";
+            $sql = "SELECT * from usuario";
             $conn = $dao->conecta();
             $stman = $conn->prepare($sql);
             //$stman = $dao->conecta()->prepare($sql);
@@ -21,7 +21,7 @@ class UsuarioController
     public function get($id)
     {
         try {
-            $sql = "select * from usuario where id = :id";
+            $sql = "SELECT * from usuario where id = :id";
             $dao = new DAO;
             $stman = $dao->conecta()->prepare($sql);
             $stman->bindParam(":id", $id);
@@ -37,7 +37,7 @@ class UsuarioController
     {
         try {
             $sql = "INSERT INTO usuario 
-                    (id, nome, senha, data_nasc, email, fotoPerfil, tel, cpf, ativo) 
+                    (id, nome, senha, data_nasc, email, foto_perfil, tel, cpf, ativo) 
                     VALUES
                     (null, :nome, md5(:senha), :data_nasc, :email, :foto_perfil, :tel, :cpf, :ativo)";
             //$senhaCryp = md5($user->senha);
@@ -68,7 +68,7 @@ class UsuarioController
                     senha = md5(:senha),
                     data_nasc = :data_nasc,
                     email = :email,
-                    fotoPerfil = :foto_perfil,
+                    foto_perfil = :foto_perfil,
                     tel = :tel,
                     cpf = :cpf, 
                     ativo = :ativo
@@ -93,6 +93,23 @@ class UsuarioController
             throw new Exception("Erro ao atualizado o usuario: " . $e->getMessage());
         }
     }
+
+
+    public function delete($id)
+    {
+        try {
+            $sql = "DELETE FROM usuario WHERE id = :id";
+            $dao = new DAO;
+            $stman = $dao->conecta()->prepare($sql);
+            $stman->bindParam(":id", $id);
+            return $stman->execute();
+        } catch (PDOException $pe) {
+            throw new Exception("Erro ao apagar o usuario: " . $pe->getMessage());
+        } catch (Exception $e) {
+            throw new Exception("Erro ao acessar a base de dados: " . $e->getMessage());
+        }
+    }
+
 
 
     private  function  formatDateBD($date)
