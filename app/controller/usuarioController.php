@@ -113,7 +113,6 @@ class UsuarioController
     }
 
 
-
     private  function  formatDateBD($date)
     { // Entrada: DD/MM/YYYY -> YYYY/MM/DD
         $partDate = explode("/", $date);
