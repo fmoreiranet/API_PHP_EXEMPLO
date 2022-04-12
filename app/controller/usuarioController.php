@@ -125,7 +125,12 @@ class UsuarioController
             $stman->bindParam(":email", $usuario);
             $stman->bindParam(":senha", $senhaCryp);
             $stman->execute();
-            return $stman->fetchALL();
+            $user = $stman->fetchALL();
+            if (count($user) > 0) {
+                //var_dump($user);
+                $user["token"] = generateJWT($user);
+            }
+            return $user;
         } catch (PDOException $pe) {
             throw new Exception("Erro ao busca acesso ao usuario: " . $pe->getMessage());
         } catch (Exception $e) {

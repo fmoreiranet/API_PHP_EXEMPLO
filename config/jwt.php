@@ -14,8 +14,8 @@ function generateJWT($dados)
     //Payload - Content
     $payload = [
         'exp' => (new DateTime("now"))->getTimestamp(),
-        'uid' => $dados->id,
-        'email' => $dados->email,
+        'uid' => $dados["ID"],
+        'email' => $dados["EMAIL"],
     ];
 
     //JSON

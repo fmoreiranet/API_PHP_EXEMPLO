@@ -1,5 +1,6 @@
 <?php
 include_once "./config/config.php";
+include_once "./config/jwt.php";
 
 require_once "./app/services/DAO.php";
 require_once "./app/models/usuario.php";
