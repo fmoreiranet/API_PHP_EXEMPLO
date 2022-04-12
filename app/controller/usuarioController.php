@@ -22,7 +22,7 @@ class UsuarioController
     public function get($id)
     {
         try {
-            $sql = "SELECT * from usuario where id = :id && ativo <> 0";
+            $sql = "SELECT * from usuario where id = :id and ativo <> 0";
             $dao = new DAO;
             $stman = $dao->conecta()->prepare($sql);
             $stman->bindParam(":id", $id);
@@ -116,7 +116,9 @@ class UsuarioController
     public function logon($usuario, $pass)
     {
         try {
-            $sql = "SELECT id, nome, email From usuario Where email = :email && senha = md5(:senha)";
+            $sql = "SELECT id, nome, email, foto_perfil 
+                From usuario 
+                Where email = :email and senha = md5(:senha)";
             $senhaCryp = crypt($pass, '$5$rounds=5000$' . $usuario . '$');
             $dao = new DAO;
             $stman = $dao->conecta()->prepare($sql);

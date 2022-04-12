@@ -79,6 +79,11 @@ try {
                             $result = $userController->add($user);
                         }
                         break;
+                    case 'logon':
+                        $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
+                        $userController = new usuarioController;
+                        $result = $userController->logon($dadosUser->usuario, $dadosUser->senha);
+                        break;
                     default:
                         throw new Exception();
                         break;
