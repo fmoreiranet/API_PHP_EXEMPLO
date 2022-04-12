@@ -113,6 +113,25 @@ class UsuarioController
     }
 
 
+    public function logon($usuario, $pass)
+    {
+        try {
+            $sql = "SELECT id, nome, email From usuario Where email = :email && senha = md5(:senha)";
+            $senhaCryp = crypt($pass, '$5$rounds=5000$' . $usuario . '$');
+            $dao = new DAO;
+            $stman = $dao->conecta()->prepare($sql);
+            $stman->bindParam(":email", $usuario);
+            $stman->bindParam(":senha", $senhaCryp);
+            $stman->execute();
+            return $stman->fetchALL();
+        } catch (PDOException $pe) {
+            throw new Exception("Erro ao busca acesso ao usuario: " . $pe->getMessage());
+        } catch (Exception $e) {
+            throw new Exception("Erro ao acessar a base de dados: " . $e->getMessage());
+        }
+    }
+
+
     private  function  formatDateBD($date)
     { // Entrada: DD/MM/YYYY -> YYYY/MM/DD
         $partDate = explode("/", $date);
