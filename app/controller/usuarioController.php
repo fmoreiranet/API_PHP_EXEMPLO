@@ -128,7 +128,7 @@ class UsuarioController
             $user = $stman->fetchALL();
             if (count($user) > 0) {
                 //var_dump($user);
-                $user["token"] = generateJWT($user);
+                $user["token"] = generateJWT($user[0]);
             }
             return $user;
         } catch (PDOException $pe) {
