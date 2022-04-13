@@ -7,6 +7,7 @@ require_once "./app/models/usuario.php";
 require_once "./app/controller/usuarioController.php";
 
 //phpinfo();
+
 try {
     if (count($_REQUEST) == 0) throw new Exception();
 
