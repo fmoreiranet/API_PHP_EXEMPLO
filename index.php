@@ -9,16 +9,24 @@ require_once "./app/controller/usuarioController.php";
 //phpinfo();
 
 try {
-    if (count($_REQUEST) == 0) throw new Exception();
-
+    //Autenticação
+    //if (count($_REQUEST) == 0) throw new Exception();
+    $auth = validJWT($_SERVER["HTTP_AUTHORIZATION"]);
+    if (!$auth) throw new Exception();
+    //Cria um session
+    session_start();
+    $_SESSION["user"] = json_decode($auth);
+    //Validação
     $method = $_SERVER["REQUEST_METHOD"];
+    $url = explode("/", $_SERVER["REQUEST_URI"]);
+    array_shift($url);
 
-    $url = explode("/", $_GET["url"]);
+    //$url = explode("/", $_GET["url"]);
     //localhost/api/usuario/list
     //localhost/api/usuario/get/1
     //var_dump($url);
 
-    $result = null;
+    $result = null; //Variavel para os resultados
     //Pesquisa
     if ($method == "GET") {
         header("Content-Type: application/json; charset=UTF-8");
