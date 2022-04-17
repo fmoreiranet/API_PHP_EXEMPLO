@@ -9,47 +9,97 @@ require_once "./app/controller/usuarioController.php";
 //phpinfo();
 
 try {
-    //Autenticação
-    //if (count($_REQUEST) == 0) throw new Exception();
-    $auth = validJWT($_SERVER["HTTP_AUTHORIZATION"]);
-    if (!$auth) throw new Exception();
-    //Cria um session
-    session_start();
-    $_SESSION["user"] = json_decode($auth);
-    //Validação
-    $method = $_SERVER["REQUEST_METHOD"];
-    $url = explode("/", $_SERVER["REQUEST_URI"]);
-    array_shift($url);
-
-    //$url = explode("/", $_GET["url"]);
-    //localhost/api/usuario/list
-    //localhost/api/usuario/get/1
-    //var_dump($url);
-
     $result = null; //Variavel para os resultados
-    //Pesquisa
-    if ($method == "GET") {
-        header("Content-Type: application/json; charset=UTF-8");
+    //Cabeçalho comumda aplicação
+    header("Content-Type: application/json; charset=UTF-8");
 
-        switch ($url[0]) {
-            case "usuario":
-                switch ($url[1]) {
-                    case "get": {
-                            if (!isset($url[2])) throw new Exception();
-                            $userController = new usuarioController;
-                            $result = $userController->get($url[2]);
+    //Validação
+    $method = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : null;
+
+    if ($method) {
+        $url = explode("/", $_SERVER["REQUEST_URI"]);
+        array_shift($url);
+        array_shift($url);
+        $result = authentic($method, $url);
+    } else {
+        throw new Exception();
+    };
+
+    if ($result == null) {
+        $result = rotas($method, $url);
+    }
+
+    http_response_code(200);
+    echo json_encode(array("result" => $result));
+} catch (Exception $e) {
+    http_response_code(404);
+    echo json_encode(array("result" => "Pagina não encontrada!"));
+}
+
+function rotas($method, $url)
+{
+    $result = null;
+    //Rotas Autenticadas
+    switch ($method) {
+        case "GET": {
+                switch ($url[0]) {
+                    case "usuario":
+                        switch ($url[1]) {
+                            case "get": {
+                                    if (!isset($url[2])) throw new Exception();
+                                    $userController = new usuarioController;
+                                    $result = $userController->get($url[2]);
+                                }
+                                break;
+
+                            case "list": {
+                                    $userController = new usuarioController;
+                                    $result = $userController->getAll();
+                                }
+                                break;
+
+                            case "listnot": {
+                                    $userController = new usuarioController;
+                                    $result = $userController->getAll(0);
+                                }
+                                break;
+
+                            default:
+                                throw new Exception();
+                                break;
                         }
                         break;
 
-                    case "list": {
-                            $userController = new usuarioController;
-                            $result = $userController->getAll();
-                        }
+                    case "produto":
                         break;
 
-                    case "listnot": {
-                            $userController = new usuarioController;
-                            $result = $userController->getAll(0);
+                    default:
+                        throw new Exception();
+                        break;
+                }
+            }
+            break;
+
+
+        case "POST": {
+                switch ($url[0]) {
+                    case "usuario":
+                        switch ($url[1]) {
+                            case 'add':
+                            case 'update':
+                                $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
+                                $userController = new usuarioController;
+                                $user = new Usuario;
+                                $user->popo($dadosUser);
+                                if ($user->id != null) { // Se tem id Update se não Add
+                                    $result = $userController->update($user);
+                                } else {
+                                    $result = $userController->add($user);
+                                }
+                                break;
+                            default:
+                                throw new Exception();
+                                break;
                         }
                         break;
 
@@ -57,42 +107,74 @@ try {
                         throw new Exception();
                         break;
                 }
-                break;
+            }
+            break;
 
-            case "produto":
-                break;
 
-            default:
-                throw new Exception();
-                break;
-        }
+        case "PUT": {
+                switch ($url[0]) {
+                    case "usuario":
+                        switch ($url[1]) {
+                            case 'update':
+                                $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
+                                $userController = new usuarioController;
+                                $user = new Usuario;
+                                $user->popo($dadosUser);
+                                $result = $userController->update($user);
+                                break;
+                            default:
+                                throw new Exception();
+                                break;
+                        }
+                        break;
 
-        http_response_code(200);
-        echo json_encode(array("result" => $result));
+                    default:
+                        throw new Exception();
+                        break;
+                }
+            }
+            break;
+
+        case "DELETE": {
+                switch ($url[0]) {
+                    case "usuario":
+                        switch ($url[1]) {
+                            case 'delete':
+                                if (!isset($url[2])) throw new Exception();
+                                $userController = new usuarioController;
+                                $result = $userController->delete($url[2]);
+                                break;
+                            default:
+                                throw new Exception();
+                                break;
+                        }
+                        break;
+
+                    default:
+                        throw new Exception();
+                        break;
+                }
+            }
+            break;
     }
+    return $result;
+}
 
-    //Cadastros
+function authentic($method, $url)
+{
+    $token = null;
+    $result = null;
+
+    //Rotas Não Autenticadas
     if ($method == "POST") {
-        header("Content-Type: application/json; charset=UTF-8");
         switch ($url[0]) {
             case "usuario":
                 switch ($url[1]) {
-                    case 'add':
-                    case 'update':
-                        $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
-                        $userController = new usuarioController;
-                        $user = new Usuario;
-                        $user->popo($dadosUser);
-                        if ($user->id != null) { // Se tem id Update se não Add
-                            $result = $userController->update($user);
-                        } else {
-                            $result = $userController->add($user);
-                        }
-                        break;
                     case 'logon':
                         $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
                         $userController = new usuarioController;
                         $result = $userController->logon($dadosUser->usuario, $dadosUser->senha);
+                        $token = isset($result["token"]) ? $result["token"] : $token;
                         break;
                     default:
                         throw new Exception();
@@ -104,69 +186,17 @@ try {
                 throw new Exception();
                 break;
         }
-
-        http_response_code(200);
-        //echo "Entra de um POST";
-        echo json_encode(array("result" => $result));
     }
 
-    //Atualizações
-    if ($method == "PUT") {
-        header("Content-Type: application/json; charset=UTF-8");
-        switch ($url[0]) {
-            case "usuario":
-                switch ($url[1]) {
-                    case 'update':
-                        $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
-                        $userController = new usuarioController;
-                        $user = new Usuario;
-                        $user->popo($dadosUser);
-                        $result = $userController->update($user);
-                        break;
-                    default:
-                        throw new Exception();
-                        break;
-                }
-                break;
+    //Autenticação
+    $token = isset($_SERVER["HTTP_AUTHORIZATION"]) ? $_SERVER["HTTP_AUTHORIZATION"] : $token;
+    if ($token == null) throw new Exception();
+    $auth = $token != null ? validJWT($token) : null;
+    if ($token == null && $auth == null) throw new Exception();
 
-            default:
-                throw new Exception();
-                break;
-        }
+    //Cria um session
+    session_start();
+    $_SESSION["user"] = json_decode($auth);
 
-        http_response_code(200);
-        //echo "Entra de um POST";
-        echo json_encode(array("result" => $result));
-    }
-
-
-    //Remoções
-    if ($method == "DELETE") {
-        header("Content-Type: application/json; charset=UTF-8");
-        switch ($url[0]) {
-            case "usuario":
-                switch ($url[1]) {
-                    case 'delete':
-                        if (!isset($url[2])) throw new Exception();
-                        $userController = new usuarioController;
-                        $result = $userController->delete($url[2]);
-                        break;
-                    default:
-                        throw new Exception();
-                        break;
-                }
-                break;
-
-            default:
-                throw new Exception();
-                break;
-        }
-
-        http_response_code(200);
-        //echo "Entra de um POST";
-        echo json_encode(array("result" => $result));
-    }
-} catch (Exception $e) {
-    http_response_code(404);
-    echo json_encode(array("result" => "Pagina não encontrada!"));
+    return $result;
 }
