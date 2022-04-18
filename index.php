@@ -9,14 +9,16 @@ require_once "./app/controller/usuarioController.php";
 //phpinfo();
 
 try {
-    $result = null; //Variavel para os resultados
-    //Cabeçalho comumda aplicação
+    //Variavel para os resultados
+    $result = null;
+
+    //Cabeçalho comum da aplicação
     header("Content-Type: application/json; charset=UTF-8");
 
-    //Validação
+    //Validação de rotas
     $method = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : null;
+    if ($method != null) {
 
-    if ($method) {
         $url = explode("/", $_SERVER["REQUEST_URI"]);
         array_shift($url);
         array_shift($url);
@@ -26,9 +28,10 @@ try {
     };
 
     if ($result == null) {
-        $result = rotas($method, $url);
+        $result = route($method, $url);
     }
 
+    //A resposta se não existir errose se existirem dados
     http_response_code(200);
     echo json_encode(array("result" => $result));
 } catch (Exception $e) {
@@ -36,11 +39,14 @@ try {
     echo json_encode(array("result" => "Pagina não encontrada!"));
 }
 
-function rotas($method, $url)
+
+function route($method, $url)
 {
     $result = null;
     //Rotas Autenticadas
     switch ($method) {
+
+            //Leituras
         case "GET": {
                 switch ($url[0]) {
                     case "usuario":
@@ -80,7 +86,7 @@ function rotas($method, $url)
             }
             break;
 
-
+            //Cadastro
         case "POST": {
                 switch ($url[0]) {
                     case "usuario":
@@ -110,7 +116,7 @@ function rotas($method, $url)
             }
             break;
 
-
+            //Alteração
         case "PUT": {
                 switch ($url[0]) {
                     case "usuario":
@@ -135,6 +141,7 @@ function rotas($method, $url)
             }
             break;
 
+            //Delete
         case "DELETE": {
                 switch ($url[0]) {
                     case "usuario":
@@ -160,13 +167,22 @@ function rotas($method, $url)
     return $result;
 }
 
+
 function authentic($method, $url)
 {
-    $token = null;
     $result = null;
 
+    //Cria um session
+    if (!session_start()) {
+        session_start();
+    };
+
+    //Autenticação
+    $token = isset($_SERVER["HTTP_AUTHORIZATION"]) ? $_SERVER["HTTP_AUTHORIZATION"] : null;
+    $auth = isset($_SESSION[$token]) ? $_SESSION[$token] : null;
+
     //Rotas Não Autenticadas
-    if ($method == "POST") {
+    if ($method == "POST" && $auth == null) {
         switch ($url[0]) {
             case "usuario":
                 switch ($url[1]) {
@@ -187,16 +203,10 @@ function authentic($method, $url)
                 break;
         }
     }
-
-    //Autenticação
-    $token = isset($_SERVER["HTTP_AUTHORIZATION"]) ? $_SERVER["HTTP_AUTHORIZATION"] : $token;
     if ($token == null) throw new Exception();
     $auth = $token != null ? validJWT($token) : null;
     if ($token == null && $auth == null) throw new Exception();
-
-    //Cria um session
-    session_start();
-    $_SESSION["user"] = json_decode($auth);
+    $_SESSION[$token] = json_decode($auth);
 
     return $result;
 }
