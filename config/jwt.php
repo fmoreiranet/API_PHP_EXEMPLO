@@ -38,7 +38,7 @@ function generateJWT($dados)
     return $token;
 }
 
-function valideJWT($token)
+function validJWT($token)
 {
     $key = KEY;
 
