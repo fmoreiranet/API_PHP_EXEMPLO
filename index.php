@@ -17,8 +17,14 @@ try {
 
     //Validação de rotas
     $method = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : null;
-    if ($method != null) {
 
+    // if(isset($_SERVER["REQUEST_METHOD"])){
+    //     $method = $_SERVER["REQUEST_METHOD"];
+    // }else{
+    //     $method = null;
+    // }
+
+    if ($method != null) {
         $url = explode("/", $_SERVER["REQUEST_URI"]);
         array_shift($url);
         array_shift($url);
@@ -205,7 +211,7 @@ function authentic($method, $url)
     }
     if ($token == null) throw new Exception();
     $auth = $token != null ? validJWT($token) : null;
-    if ($token == null && $auth == null) throw new Exception();
+    if ($token == null || $auth == null) throw new Exception();
     $_SESSION[$token] = json_decode($auth);
 
     return $result;
