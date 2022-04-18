@@ -4,7 +4,7 @@
 function generateJWT($dados)
 {
     //Application Key
-    $key = "ff08e69475562803be134abe13fbd09f27356cfd14944353e789a9afa4661a70"; // loja - exemplo
+    $key = KEY; // loja - exemplo
 
     //Header Token
     $header = [
@@ -14,9 +14,10 @@ function generateJWT($dados)
 
     //Payload - Content
     $payload = [
-        'exp' => (new DateTime("now"))->getTimestamp(),
+        'exp' => (new DateTime("now"))->getTimestamp(), //tempo em segundos a partir de 1/1/1970
         'uid' => $dados->id,
         'email' => $dados->email,
+        'name' => $dados->nome,
     ];
 
     //JSON
@@ -39,7 +40,7 @@ function generateJWT($dados)
 
 function valideJWT($token)
 {
-    $key = "ff08e69475562803be134abe13fbd09f27356cfd14944353e789a9afa4661a70";
+    $key = KEY;
 
     $token =  str_replace(["Bearer", " "], "", $token);
 
