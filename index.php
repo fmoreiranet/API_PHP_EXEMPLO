@@ -29,7 +29,7 @@ try {
         $url = explode("/", $_SERVER["REQUEST_URI"]);
         array_shift($url);
         array_shift($url);
-        //$result = authentic($method, $url); //Comentar para gravar sem validar o usuarios
+        $result = authentic($method, $url); //Comentar para gravar sem validar o usuarios
     } else {
         throw new Exception();
     };
