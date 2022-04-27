@@ -17,15 +17,15 @@ try {
 
     $method = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : null;
 
+    header("Access-Control-Allow-Origin: *");
+    header("Content-Type: application/json; charset=UTF-8");
+
     if ($method == "OPTIONS") {
         //Cabeçalho comum da aplicação    
-        header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS");
         header("Access-Control-Allow-Headers: *");
-        //header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, X-Token-Auth, Authorization');
-        header("Content-Type: application/json, charset=UTF-8");
         header("Access-Control-Max-Age: 3600"); //1hora == 3600 seg;
-        //header("Access-Control-Allow-Credentials: false"); //1hora == 3600 seg;
+        header("Access-Control-Allow-Credentials: true");
     }
 
     if ($method != null && $method != "OPTIONS") {
@@ -50,6 +50,7 @@ try {
         }
 
         //A resposta se não existir errose se existirem dados
+        //header('Content-Type: application/json;charset=utf-8');
         http_response_code($httpCod);
         echo json_encode(array("result" => $result));
     } else {
