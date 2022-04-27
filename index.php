@@ -15,22 +15,27 @@ try {
     $httpCod = null;
     $auth = null;
 
-    //Cabeçalho comum da aplicação
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS");
-    header("Content-Type: application/json; charset=UTF-8");
-    header("Access-Control-Max-Age: 3600"); //1hora == 3600 seg
-    header("Access-Control-Allow-Headers: origin, Content-Type, X-Requested-With");
-
-    //Validação de rotas
     $method = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : null;
 
-    if ($method != null) {
+    if ($method == "OPTIONS") {
+        //Cabeçalho comum da aplicação    
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS");
+        header("Access-Control-Allow-Headers: *");
+        //header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, X-Token-Auth, Authorization');
+        header("Content-Type: application/json, charset=UTF-8");
+        header("Access-Control-Max-Age: 3600"); //1hora == 3600 seg;
+        //header("Access-Control-Allow-Credentials: false"); //1hora == 3600 seg;
+    }
+
+    if ($method != null && $method != "OPTIONS") {
+        //Validação de rotas
         $url = explode("/", $_SERVER["REQUEST_URI"]);
         array_shift($url);
         array_shift($url);
 
         $auth = authentic($method, $url);
+        //$auth = "userAll";
 
         //Verifica validação do usuario
         if ($auth != null && $url[count($url) - 1] == "logon") {
@@ -48,7 +53,7 @@ try {
         http_response_code($httpCod);
         echo json_encode(array("result" => $result));
     } else {
-        throw new Exception();
+        //throw new Exception();
     };
 } catch (Exception $e) {
     http_response_code(404);
