@@ -64,6 +64,7 @@ try {
     echo json_encode(array("result" => "Pagina não encontrada!"));
 }
 
+
 function guardian($urlPadrao)
 {
     $urlPadrao = $_SERVER["REQUEST_URI"];
@@ -75,6 +76,7 @@ function guardian($urlPadrao)
     //verificar se a rota é uma daquelas do array. Se for retorna o numero. Ele retorna o numero do index do array senão retorna false FALSE;
     return array_search($urlPadrao, $routesFree);
 }
+
 
 function route($method, $url)
 {
