@@ -29,6 +29,9 @@ try {
     }
 
     if ($method != null && $method != "OPTIONS") {
+
+        $authRouterFree = guardian($_SERVER["REQUEST_URI"]);
+
         //Validação de rotas
         $url = explode("/", $_SERVER["REQUEST_URI"]);
         array_shift($url);
@@ -41,7 +44,7 @@ try {
         if ($auth != null && $url[count($url) - 1] == "logon") {
             $httpCod = 200;
             $result = $auth;
-        } else if ($auth != null) {
+        } else if ($auth != null || $authRouterFree) {
             $httpCod = 200;
             $result = route($method, $url);
         } else {
@@ -61,6 +64,17 @@ try {
     echo json_encode(array("result" => "Pagina não encontrada!"));
 }
 
+function guardian($urlPadrao)
+{
+    $urlPadrao = $_SERVER["REQUEST_URI"];
+    $routesFree = [
+        "/api/usuario/logon",
+        "/api/usuario/add",
+        "/api/produto/list"
+    ];
+    //verificar se a rota é uma daquelas do array. Se for retorna o numero. Ele retorna o numero do index do array senão retorna false FALSE;
+    return array_search($urlPadrao, $routesFree);
+}
 
 function route($method, $url)
 {
