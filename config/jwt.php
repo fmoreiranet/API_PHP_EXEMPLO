@@ -17,6 +17,7 @@ function generateJWT($dados)
         'uid' => $dados->id,
         'email' => $dados->email,
         'name' => $dados->nome,
+        'foto_perfil' => $dados->foto_perfil
     ];
 
     //JSON

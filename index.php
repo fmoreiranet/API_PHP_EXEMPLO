@@ -46,7 +46,7 @@ try {
             $result = $auth;
         } else if ($auth != null || $authRouterFree) {
             $httpCod = 200;
-            $result = route($method, $url);
+            $result = route($method, $url, $auth);
         } else {
             $httpCod = 401;
             $result = "Usuario sem autorização";
@@ -78,7 +78,7 @@ function guardian($urlPadrao)
 }
 
 
-function route($method, $url)
+function route($method, $url, $auth)
 {
     $result = null;
     //Rotas Autenticadas
@@ -139,6 +139,14 @@ function route($method, $url)
                                     $result = $userController->update($user);
                                 } else {
                                     $result = $userController->add($user);
+                                }
+                                break;
+                            case "upload" && $auth:
+                                $userController = new usuarioController;
+                                $user = json_decode($auth);
+                                $nameFile = uploadfotos(MIDIAS_USER);
+                                if ($nameFile) {
+                                    $userController->updatePhoto($user->uid, $nameFile);
                                 }
                                 break;
                             default:
@@ -251,4 +259,29 @@ function authentic($method, $url)
     }
 
     return $result;
+}
+
+
+function uploadfotos($local, $nameFiles = null)
+{
+    $files = $_FILES;
+    if ($files) {
+        $local = new DirectoryIterator("./") . $local;
+        if (!is_dir($local)) {
+            mkdir($local, 0755, true);
+        }
+
+        $nameFiles = isset($nameFiles) ? $nameFiles : md5($files['file']['name']);
+        $ext = explode('.', $files['file']['name']);
+
+        $newNameFile = $nameFiles . "." . $ext[count($ext) - 1];
+
+        $destino = $local . '/' .  $newNameFile;
+
+        $arquivo_tmp = $files['file']['tmp_name'];
+
+        move_uploaded_file($arquivo_tmp, $destino);
+
+        return $newNameFile;
+    }
 }

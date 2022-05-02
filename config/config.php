@@ -15,3 +15,6 @@ define("USER", "root"); //Usuario do banco de dados
 define("DB", "loja-exemplo"); //Nome do banco de dados
 
 //define("KEY", "none");
+
+define("MIDIAS_USER", "/midias/user"); //Local da pasta onde será gravado os dados
+define("MIDIAS_PRODUTOS", "/midias/produtos"); //Local da pasta onde será gravado os dados
