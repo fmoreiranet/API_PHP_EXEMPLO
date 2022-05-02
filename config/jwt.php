@@ -3,7 +3,7 @@
 function generateJWT($dados)
 {
     //Application Key
-    $key = KEY; // loja - exemplo
+    $key = KEY; // loja - exemplo -> sha256
 
     //Header Token
     $header = [
@@ -17,7 +17,8 @@ function generateJWT($dados)
         'uid' => $dados->id,
         'email' => $dados->email,
         'name' => $dados->nome,
-        'foto_perfil' => $dados->foto_perfil
+        'foto_perfil' => $dados->foto_perfil,
+        'ultimo_login' => (new DateTime("now"))->getTimestamp(),
     ];
 
     //JSON

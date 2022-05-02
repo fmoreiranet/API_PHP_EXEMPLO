@@ -270,8 +270,11 @@ function uploadfotos($local, $nameFiles = null)
         if (!is_dir($local)) {
             mkdir($local, 0755, true);
         }
+        $timeStamp =  (new DateTime("now"))->getTimestamp(); //use o timestamp: é o tempo em segundos
+        //$nameFileMD5 = md5($files['file']['name'] . $files['file']['size'] . $files['file']['type']);
+        $nameFileMD5 = md5($files['file']['name'] . $timeStamp);
 
-        $nameFiles = isset($nameFiles) ? $nameFiles : md5($files['file']['name']);
+        $nameFiles = isset($nameFiles) ? $nameFiles : $nameFileMD5;
         $ext = explode('.', $files['file']['name']);
 
         $newNameFile = $nameFiles . "." . $ext[count($ext) - 1];
