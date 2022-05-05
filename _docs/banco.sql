@@ -70,20 +70,10 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`nome`, `senha`, `data_nasc`, `email`, `foto_perfil`, `tel`, `cpf`, `id`, `ativo`) VALUES
-('Carlos Roberto', '123@123', '1980-04-02', 'cr@email.com', '', '5555-55555', '12312312344', 3, 0),
-('Silvia Cristina', '53e6086284353cb73d4979f08537d950', '2010-05-12', 'sc@email.com', '', '5555-666666', '12312312344', 4, 1),
-('Mario Carlos', '90c3f9b8a9d0361e851b3b5205b94918', '1980-06-20', 'mc@email.com', '', '5555-5567', '123123999', 5, 1),
-('Silvia Cristina Crypt', 'c299ff7d4c6e7bb2517abe42496b10ee', '2010-05-12', 'sc@email.com', '', '5555-666666', '12312312344', 6, 1),
-('Silvia Cristina Crypt3', '3f415f27d8797b3003575ee77b0ec225', '2010-05-12', 'sc@email.com', '', '5555-666666', '12312312344', 8, 1),
-('Mario Carlos', '90c3f9b8a9d0361e851b3b5205b94918', '1980-06-20', 'mc@email.com', '', '5555-556667', '12312399999', 10, 1),
-('Mario Carlos', '90c3f9b8a9d0361e851b3b5205b94918', '1980-06-20', 'mc@email.com', '', '5555-556667', '12312399999', 11, 1),
-('Maria Silva', 'bc0bcfbb85fd4119e3c7bf30c9e6ddf1', '1980-07-20', 'ms@email.com', '', '5555-55555', '12312366666', 14, 1),
-('Maria das Graças', '3d302d85d53c6ab4a85b55c1999eeab5', '1979-08-21', 'mg@email.com', '', '5555-88888', '123123888', 17, 1),
-('Maria das Graças', '3d302d85d53c6ab4a85b55c1999eeab5', '1979-08-21', 'mg@email.com', '', '5555-88888', '123123888', 18, 1),
-('Maria das Graças', '3d302d85d53c6ab4a85b55c1999eeab5', '1979-08-21', 'mg@email.com', '', '5555-88888', '123123888', 19, 1),
-('Maria das Graças', '3d302d85d53c6ab4a85b55c1999eeab5', '1979-08-21', 'mg@email.com', '', '5555-88888', '123123888', 20, 1),
-('Maria das Graças', '3d302d85d53c6ab4a85b55c1999eeab5', '1979-08-21', 'mg@email.com', '', '5555-88888', '123123888', 21, 1),
-('Maria das Graças', '3d302d85d53c6ab4a85b55c1999eeab5', '1979-08-21', 'mg@email.com', '', '5555-88888', '123123888', 22, 1);
+('Silvia Cristina', '53e6086284353cb73d4979f08537d950', '2010-05-12', 'sc@email.com', '', '5555-666666', '12312312344', 1, 1),
+('Mario Carlos', '90c3f9b8a9d0361e851b3b5205b94918', '1980-06-20', 'mc@email.com', '', '5555-5567', '123123999', 2, 1),
+('Maria Silva', 'bc0bcfbb85fd4119e3c7bf30c9e6ddf1', '1980-07-20', 'ms@email.com', '', '5555-55555', '12312366666', 3, 1),
+('Maria das Graças', '3d302d85d53c6ab4a85b55c1999eeab5', '1979-08-21', 'mg@email.com', '', '5555-88888', '123123888', 4, 1);
 
 -- --------------------------------------------------------
 
