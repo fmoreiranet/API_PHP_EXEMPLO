@@ -154,21 +154,25 @@ function uploadfotos($local, $nameFiles = null)
         if (!is_dir($local)) {
             mkdir($local, 0755, true);
         }
-        $timeStamp =  (new DateTime("now"))->getTimestamp(); //use o timestamp: é o tempo em segundos
-        //$nameFileMD5 = md5($files['file']['name'] . $files['file']['size'] . $files['file']['type']);
-        $nameFileMD5 = md5($files['file']['name'] . $timeStamp);
+        $resultName = null;
+        foreach ($files as $file) {
+            $timeStamp =  (new DateTime("now"))->getTimestamp(); //use o timestamp: é o tempo em segundos
+            //$nameFileMD5 = md5($files['file']['name'] . $files['file']['size'] . $files['file']['type']);
+            $nameFileMD5 = md5($file['name'] . $timeStamp);
 
-        $nameFiles = isset($nameFiles) ? $nameFiles : $nameFileMD5;
-        $ext = explode('.', $files['file']['name']);
+            $nameFiles = isset($nameFiles) ? $nameFiles : $nameFileMD5;
+            $ext = explode('.', $file['name']);
 
-        $newNameFile = $nameFiles . "." . $ext[count($ext) - 1];
+            $newNameFile = $nameFiles . "." . $ext[count($ext) - 1];
 
-        $destino = $local . '/' .  $newNameFile;
+            $destino = $local . '/' .  $newNameFile;
 
-        $arquivo_tmp = $files['file']['tmp_name'];
+            $arquivo_tmp = $file['tmp_name'];
 
-        move_uploaded_file($arquivo_tmp, $destino);
-
-        return $newNameFile;
+            if (move_uploaded_file($arquivo_tmp, $destino)) {
+                $resultName .= $newNameFile;
+            };
+        }
     }
+    return $resultName;
 }

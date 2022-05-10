@@ -59,6 +59,7 @@ function routeUser($method, $url, $auth)
                                 if ($nameFile) {
                                     $userController->updatePhoto($user->uid, $nameFile);
                                 }
+                                $result = $nameFile;
                                 break;
                         }
                         break;
@@ -159,13 +160,16 @@ function routeProduto($method, $url, $auth)
                                     $result = $produtoController->add($produto);
                                 }
                                 break;
-                            case "upload" && $auth:
+                            case "upload":
                                 $produtoController = new produtoController;
-                                $produto = json_decode($auth);
-                                $nameFile = uploadfotos(MIDIAS_USER);
-                                if ($nameFile) {
-                                    $produtoController->updatePhoto($produto->uid, $nameFile);
+                                $produto = isset($url[2]) ? $url[2] : null;
+                                $nameFile = uploadfotos(MIDIAS_PRODUTOS);
+                                if ($produto != null) {
+                                    if ($nameFile) {
+                                        $produtoController->updatePhoto($produto, $nameFile);
+                                    }
                                 }
+                                $result = $nameFile;
                                 break;
                         }
                         break;
