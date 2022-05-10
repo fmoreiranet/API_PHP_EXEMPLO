@@ -115,6 +115,31 @@ function route($method, $url, $auth)
                         break;
 
                     case "produto":
+                        switch ($url[1]) {
+                            case "get": {
+                                    if (!isset($url[2])) throw new Exception();
+                                    $userController = new usuarioController;
+                                    $result = $userController->get($url[2]);
+                                }
+                                break;
+
+                            case "list": {
+                                    $userController = new usuarioController;
+                                    $result = $userController->getAll();
+                                }
+                                break;
+
+                            case "listnot": {
+                                    $userController = new usuarioController;
+                                    $result = $userController->getAll(0);
+                                }
+                                break;
+
+                            default:
+                                throw new Exception();
+                                break;
+                        }
+                        break;
                         break;
 
                     default:

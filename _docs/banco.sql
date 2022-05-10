@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 30-Abr-2022 às 02:39
+-- Tempo de geração: 10-Maio-2022 às 03:36
 -- Versão do servidor: 10.4.24-MariaDB
 -- versão do PHP: 8.1.4
 
@@ -41,11 +41,21 @@ CREATE TABLE `produto` (
   `descricao` varchar(255) NOT NULL,
   `quant` int(11) NOT NULL,
   `data_alteracao` timestamp NOT NULL DEFAULT current_timestamp(),
+  `valor` decimal(11,2) NOT NULL,
   `largura` decimal(11,3) DEFAULT NULL,
   `altura` decimal(11,3) DEFAULT NULL,
   `comprimento` decimal(11,3) DEFAULT NULL,
-  `peso` decimal(11,3) DEFAULT NULL
+  `peso` decimal(11,3) DEFAULT NULL,
+  `fotos` text NOT NULL,
+  `ativo` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `produto`
+--
+
+INSERT INTO `produto` (`id`, `nome`, `descricao`, `quant`, `data_alteracao`, `valor`, `largura`, `altura`, `comprimento`, `peso`, `fotos`, `ativo`) VALUES
+(1, 'Celular ', 'Celular 4G', 10, '2022-05-10 00:57:09', '1200.00', '0.000', '0.000', '0.000', '0.000', '', 1);
 
 -- --------------------------------------------------------
 
@@ -70,10 +80,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`nome`, `senha`, `data_nasc`, `email`, `foto_perfil`, `tel`, `cpf`, `id`, `ativo`) VALUES
-('Silvia Cristina', '53e6086284353cb73d4979f08537d950', '2010-05-12', 'sc@email.com', '', '5555-666666', '12312312344', 1, 1),
-('Mario Carlos', '90c3f9b8a9d0361e851b3b5205b94918', '1980-06-20', 'mc@email.com', '', '5555-5567', '123123999', 2, 1),
-('Maria Silva', 'bc0bcfbb85fd4119e3c7bf30c9e6ddf1', '1980-07-20', 'ms@email.com', '', '5555-55555', '12312366666', 3, 1),
-('Maria das Graças', '3d302d85d53c6ab4a85b55c1999eeab5', '1979-08-21', 'mg@email.com', '', '5555-88888', '123123888', 4, 1);
+('Silvia Cristiana Da Silva', '3f415f27d8797b3003575ee77b0ec225', '0000-00-00', 'sc@email.com', 'd00a0bb5897e59483116a919cc64f124.jpg', '', '12323434522', 23, 1),
+('Pedro Cunha Souza', 'f3c055d289f91aa900ada6066a7c356b', '0000-00-00', 'pc@email.com', '367bade5e9b971239f60a9e65ea7941b.jpg', '', '12323445633', 24, 1);
 
 -- --------------------------------------------------------
 
@@ -126,13 +134,13 @@ ALTER TABLE `usuario_endereco`
 -- AUTO_INCREMENT de tabela `produto`
 --
 ALTER TABLE `produto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Restrições para despejos de tabelas
