@@ -2,15 +2,17 @@
 
 class ProdutoController
 {
-    public function getAll($ativo = 1)
+    public function getAll($ativo = 1, $pag = 1,  $limit_to = 12)
     {
         try {
+            $sql = "SELECT * from produto where ativo = :ativo order by nome limit :limit_from,:limit_to ";
+            $limit_from = ($pag * $limit_to) - $limit_to;
             $dao = new DAO;
-            $sql = "SELECT * from produto where ativo = :ativo";
             $conn = $dao->conecta();
             $stman = $conn->prepare($sql);
-            //$stman = $dao->conecta()->prepare($sql);
             $stman->bindParam(":ativo", $ativo);
+            $stman->bindParam(":limit_from", $limit_from, PDO::PARAM_INT);
+            $stman->bindParam(":limit_to", $limit_to, PDO::PARAM_INT);
             $stman->execute();
             $result = $stman->fetchAll();
             return $result;
@@ -37,9 +39,9 @@ class ProdutoController
     public function add(Produto $produto)
     {
         try {
-            $sql = "INSERT INTO produto (id, nome, descricao, quant, valor, largura, altura, comprimento, peso, fotos, ativo) 
+            $sql = "INSERT INTO produto (nome, descricao, quant, valor, largura, altura, comprimento, peso, fotos, ativo) 
                     VALUES
-                    (null, :nome, :descricao, :quant, :valor, :largura, :altura, :comprimento, :peso, :fotos, :ativo);";
+                    (:nome, :descricao, :quant, :valor, :largura, :altura, :comprimento, :peso, :fotos, :ativo)";
             $dao = new DAO;
             $stman = $dao->conecta()->prepare($sql);
             $stman->bindParam(":nome", $produto->nome);
@@ -51,7 +53,7 @@ class ProdutoController
             $stman->bindParam(":comprimento", $produto->comprimento);
             $stman->bindParam(":peso", $produto->peso);
             $stman->bindParam(":fotos", $produto->fotos);
-            $stman->bindParam(":ativo)", $produto->ativo);          
+            $stman->bindParam(":ativo", $produto->ativo);
             return $stman->execute();
         } catch (Exception $e) {
             throw new Exception("Erro ao cadastra o produto: " . $e->getMessage());
@@ -90,7 +92,7 @@ class ProdutoController
             $stman->bindParam(":comprimento", $produto->comprimento);
             $stman->bindParam(":peso", $produto->peso);
             $stman->bindParam(":fotos", $produto->fotos);
-            $stman->bindParam(":ativo)", $produto->ativo);        
+            $stman->bindParam(":ativo)", $produto->ativo);
             return $stman->execute();
         } catch (Exception $e) {
             throw new Exception("Erro ao atualizado o produto: " . $e->getMessage());
@@ -113,7 +115,7 @@ class ProdutoController
             throw new Exception("Erro ao acessar a base de dados: " . $e->getMessage());
         }
     }
-    
+
     public function updatePhoto($id, $fotoName)
     {
         try {
