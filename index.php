@@ -65,8 +65,15 @@ try {
         //throw new Exception();
     };
 } catch (Exception $e) {
-    http_response_code(404);
-    echo json_encode(array("result" => "Pagina não encontrada!"));
+    $code = 404;
+    $erro = "Pagina não encontrada!";
+
+    if ($e->getMessage() != null) {
+        $code = $httpCod;
+        $erro = $e->getMessage();
+    }
+    http_response_code($code);
+    echo json_encode(array("result" => $erro));
 }
 
 
@@ -83,7 +90,8 @@ function guardian($urlPadrao)
 }
 
 
-function routes($method, $url, $auth){
+function routes($method, $url, $auth)
+{
     $result = routeUser($method, $url, $auth);
     if ($result) return $result;
     $result = routeProduto($method, $url, $auth);
@@ -108,7 +116,7 @@ function authentic($method, $url)
     //Rotas Não Autenticadas
     if ($method == "POST" && $auth == null) {
         switch ($url[0]) {
-            case "produto":
+            case "usuario":
                 switch ($url[1]) {
                     case 'logon':
                         $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
@@ -117,14 +125,12 @@ function authentic($method, $url)
                         $token = isset($result->token) ? $result->token : $token;
                         break;
                     default:
-                        //throw new Exception();
                         $result = null;
                         break;
                 }
                 break;
 
             default:
-                //throw new Exception();
                 $result = null;
                 break;
         }

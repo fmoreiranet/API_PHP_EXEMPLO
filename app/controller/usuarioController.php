@@ -56,8 +56,12 @@ class UsuarioController
             $stman->bindParam(":cpf", $user->cpf);
             $stman->bindParam(":ativo", $user->ativo);
             return $stman->execute();
+        } catch (PDOException $e) {
+            throw new Exception("Usuario ja cadastrado ou email já existente!");
         } catch (Exception $e) {
-            throw new Exception("Erro ao cadastra o usuario: " . $e->getMessage());
+            //throw new Exception("Erro ao cadastra o usuario: " . $e->getMessage());
+
+            throw new Exception("Erro ao cadastra o usuario!");
         }
     }
 
